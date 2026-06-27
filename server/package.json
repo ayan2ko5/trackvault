@@ -20,7 +20,7 @@
   "author": "Ayan Sheikh",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^7.8.0",
+    "@prisma/client": "^6.16.2",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.10.0",
     "cors": "^2.8.6",
@@ -30,7 +30,7 @@
     "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.2.0",
-    "prisma": "^7.8.0",
+    "prisma": "^6.16.2",
     "zod": "^4.4.3"
   },
   "devDependencies": {
