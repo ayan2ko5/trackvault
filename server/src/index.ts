@@ -5,7 +5,7 @@ const PORT = Number(env.PORT);
 
 const server = app.listen(PORT, () => {
   console.log("========================================");
-  console.log(" FinTrack Pro API");
+  console.log(" TrackVault API");
   console.log(` Running on http://localhost:${PORT}`);
   console.log(
     ` Environment: ${process.env.NODE_ENV || "development"}`

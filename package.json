@@ -1,5 +1,5 @@
 {
-  "name": "fintrack-pro",
+  "name": "trackvault",
   "private": true,
   "workspaces": [
     "client",

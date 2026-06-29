@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.get("/health", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "FinTrack API is running",
+    message: "trackvault API is running",
     environment: process.env.NODE_ENV || "development",
     timestamp: new Date().toISOString(),
   });
