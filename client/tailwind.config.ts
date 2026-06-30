@@ -1,6 +1,7 @@
-import type { Config } from "tailwindcss";
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: "class",
 
-const config: Config = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -8,21 +9,14 @@ const config: Config = {
 
   theme: {
     extend: {
-      colors: {
-        primary: "#7C3AED",
-        success: "#14B8A6",
-        danger: "#F43F5E",
-
-        background: "#F8FAFC",
-        surface: "#FFFFFF",
-
-        text: "#111827",
-        muted: "#6B7280",
+      borderWidth: {
+        "3": "3px",
+      },
+      animation: {
+        "spin-slow": "spin 2s linear infinite",
       },
     },
   },
 
   plugins: [],
 };
-
-export default config;
