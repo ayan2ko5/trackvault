@@ -1,97 +1,160 @@
-// ============================================================
-// FILE: client/src/routes/index.tsx  ← REPLACE your existing file
-// CHANGES FROM PHASE 6:
-//   Replaced 5 PlaceholderPage entries with real page components:
-//   ExpensesPage, IncomePage, BudgetsPage, GoalsPage, SubscriptionsPage
-// Everything else is identical to the Phase 6 router.
-// ============================================================
 
 import { createBrowserRouter } from "react-router-dom";
 
-// Route guards
+// ---- Route Guards ----
 import ProtectedRoute from "./ProtectedRoute";
 import GuestRoute from "./GuestRoute";
 
-// Layouts
+// ---- Layouts ----
 import AuthLayout from "@/layouts/AuthLayout";
 import AppLayout from "@/layouts/AppLayout";
 
-// Auth pages
+// ---- Auth Pages ----
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
 import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
 
-// Dashboard (Phase 6)
+// ---- Dashboard ----
 import DashboardPage from "@/pages/dashboard/DashboardPage";
 
-// Phase 7 — real module pages
+// ---- CRUD Modules ----
 import ExpensesPage from "@/pages/expenses/ExpensesPage";
 import IncomePage from "@/pages/income/IncomePage";
 import BudgetsPage from "@/pages/budgets/BudgetsPage";
 import GoalsPage from "@/pages/goals/GoalsPage";
 import SubscriptionsPage from "@/pages/subscriptions/SubscriptionsPage";
 
-// Still placeholder — built in Phase 8
-const PlaceholderPage = ({ title }: { title: string }) => (
-  <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-    <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center">
-      <span className="text-2xl">🚧</span>
-    </div>
-    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h2>
-    <p className="text-gray-500 dark:text-gray-400 text-sm">Coming in the next phase</p>
+// ---- Phase 8: Final pages ----
+import InsightsPage from "@/pages/insights/InsightsPage";
+import ReportsPage from "@/pages/reports/ReportsPage";
+import CategoriesPage from "@/pages/categories/CategoriesPage";
+import CalendarPage from "@/pages/calendar/CalendarPage";
+import SettingsPage from "@/pages/settings/SettingsPage";
+import ProfileSettings from "@/pages/settings/ProfileSettings";
+import SecuritySettings from "@/pages/settings/SecuritySettings";
+
+// ---- 404 page (inline — no separate file needed) ----
+const NotFoundPage = () => (
+  <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center">
+    <div className="text-6xl mb-2">🔍</div>
+    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+      Page not found
+    </h2>
+    <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    <a
+      href="/"
+      className="text-sm text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
+    >
+      ← Back to Dashboard
+    </a>
   </div>
 );
 
 const router = createBrowserRouter([
-  // ============================================================
-  // GUEST ROUTES — redirects to dashboard if already logged in
-  // ============================================================
+
   {
     element: <GuestRoute />,
     children: [
       {
         element: <AuthLayout />,
         children: [
-          { path: "/login", element: <LoginPage /> },
-          { path: "/register", element: <RegisterPage /> },
-          { path: "/forgot-password", element: <ForgotPasswordPage /> },
+          {
+            path: "/login",
+            element: <LoginPage />,
+          },
+          {
+            path: "/register",
+            element: <RegisterPage />,
+          },
+          {
+            path: "/forgot-password",
+            element: <ForgotPasswordPage />,
+          },
         ],
       },
     ],
   },
 
-  // ============================================================
-  // PROTECTED ROUTES — redirects to /login if not logged in
-  // ============================================================
   {
     element: <ProtectedRoute />,
     children: [
       {
         element: <AppLayout />,
         children: [
-          // Dashboard
-          { path: "/", element: <DashboardPage /> },
 
-          // ---- Phase 7: Real pages now ----
-          { path: "/expenses", element: <ExpensesPage /> },
-          { path: "/income", element: <IncomePage /> },
-          { path: "/budgets", element: <BudgetsPage /> },
-          { path: "/goals", element: <GoalsPage /> },
-          { path: "/subscriptions", element: <SubscriptionsPage /> },
+          // ---- Dashboard ----
+          {
+            path: "/",
+            element: <DashboardPage />,
+          },
 
-          // ---- Phase 8: Still placeholders ----
-          { path: "/categories", element: <PlaceholderPage title="Categories" /> },
-          { path: "/calendar", element: <PlaceholderPage title="Calendar" /> },
-          { path: "/reports", element: <PlaceholderPage title="Reports" /> },
-          { path: "/insights", element: <PlaceholderPage title="Smart Insights" /> },
+          // ---- Transactions ----
+          {
+            path: "/expenses",
+            element: <ExpensesPage />,
+          },
+          {
+            path: "/income",
+            element: <IncomePage />,
+          },
 
-          // Settings
-          { path: "/settings", element: <PlaceholderPage title="Settings" /> },
-          { path: "/settings/profile", element: <PlaceholderPage title="Profile Settings" /> },
-          { path: "/settings/security", element: <PlaceholderPage title="Security Settings" /> },
+          // ---- Planning ----
+          {
+            path: "/budgets",
+            element: <BudgetsPage />,
+          },
+          {
+            path: "/goals",
+            element: <GoalsPage />,
+          },
+          {
+            path: "/subscriptions",
+            element: <SubscriptionsPage />,
+          },
 
-          // 404
-          { path: "*", element: <PlaceholderPage title="Page Not Found" /> },
+          // ---- Insights & Reports ----
+          {
+            path: "/insights",
+            element: <InsightsPage />,
+          },
+          {
+            path: "/reports",
+            element: <ReportsPage />,
+          },
+
+          // ---- Calendar ----
+          {
+            path: "/calendar",
+            element: <CalendarPage />,
+          },
+
+          // ---- Categories ----
+          {
+            path: "/categories",
+            element: <CategoriesPage />,
+          },
+
+          // ---- Settings (3 sub-pages) ----
+          {
+            path: "/settings",
+            element: <SettingsPage />,
+          },
+          {
+            path: "/settings/profile",
+            element: <ProfileSettings />,
+          },
+          {
+            path: "/settings/security",
+            element: <SecuritySettings />,
+          },
+
+          // ---- 404 inside the app ----
+          {
+            path: "*",
+            element: <NotFoundPage />,
+          },
         ],
       },
     ],
