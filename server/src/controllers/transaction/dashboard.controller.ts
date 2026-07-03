@@ -4,7 +4,8 @@ import { successResponse, errorResponse } from "../../utils/response.utils";
 
 export const getSummary = async (req: Request, res: Response) => {
   try {
-    const data = await dashboardService.getSummaryData(req.userId);
+    const month = req.query.month as string | undefined;
+    const data = await dashboardService.getSummaryData(req.userId, month);
 
     return successResponse(
       res,

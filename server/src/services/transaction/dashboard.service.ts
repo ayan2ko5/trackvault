@@ -11,11 +11,11 @@ import {
 const calculateHealthScore = (
   totalIncome: number,
   totalExpenses: number,
-budgets: {
-  alertStatus: string;
-}[]
+  budgets: {
+    alertStatus: string;
+  }[]
 ): { score: number; label: string; breakdown: object } => {
- 
+
   let savingsRateScore = 0;
   if (totalIncome > 0) {
     const savingsRate =
@@ -24,12 +24,12 @@ budgets: {
     savingsRateScore = Math.max(savingsRateScore, 0); // no negative scores
   }
 
-  
-  let budgetScore = 35; 
+
+  let budgetScore = 35;
   if (budgets.length > 0) {
-   const exceededCount = budgets.filter(
-  (b) => b.alertStatus === "EXCEEDED"
-).length;
+    const exceededCount = budgets.filter(
+      (b) => b.alertStatus === "EXCEEDED"
+    ).length;
     const adherenceRate =
       ((budgets.length - exceededCount) / budgets.length) * 100;
     budgetScore = Math.round((adherenceRate / 100) * 35);
@@ -55,45 +55,51 @@ budgets: {
   };
 };
 
-export const getSummaryData = async (userId: string) => {
- 
+export const getSummaryData = async (userId: string, monthStr?: string) => {
+
   const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  let baseDate = now;
+  if (monthStr) {
+    const [year, month] = monthStr.split("-").map(Number);
+    baseDate = new Date(year, month - 1, 1);
+  }
+
+  const startOfMonth = new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
   const endOfMonth = new Date(
-    now.getFullYear(),
-    now.getMonth() + 1,
+    baseDate.getFullYear(),
+    baseDate.getMonth() + 1,
     0,
     23, 59, 59, 999
   );
 
   const [
-    monthlySummary,    
-    categoryBreakdown, 
-    monthlyTrend,      
+    monthlySummary,
+    categoryBreakdown,
+    monthlyTrend,
     recentTransactions,
-    budgets,          
-    goals,             
-    subscriptions,    
+    budgets,
+    goals,
+    subscriptions,
   ] = await Promise.all([
     getSummary(userId, startOfMonth, endOfMonth),
     getCategoryBreakdown(userId, startOfMonth, endOfMonth),
-    getMonthlyTrend(userId, 6),
+    getMonthlyTrend(userId, 6, baseDate),
 
-    
+
     prisma.transaction.findMany({
       where: { userId },
-   orderBy: [
-  {
-    date: "desc",
-  },
-  {
-    createdAt: "desc",
-  },
-],
+      orderBy: [
+        {
+          date: "desc",
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
       take: 5,
     }),
 
-    
+
     prisma.budget.findMany({
       where: {
         userId,
@@ -101,14 +107,14 @@ export const getSummaryData = async (userId: string) => {
       },
     }),
 
-   
+
     prisma.goal.findMany({
       where: { userId, isCompleted: false },
       orderBy: { createdAt: "desc" },
       take: 3, // top 3 goals for dashboard widget
     }),
 
-    
+
     prisma.subscription.findMany({
       where: { userId, isActive: true },
       orderBy: { dueDate: "asc" },
@@ -120,7 +126,7 @@ export const getSummaryData = async (userId: string) => {
     0
   );
 
-  
+
   const budgetsWithStatus = await Promise.all(
     budgets.map(async (budget) => {
       const spendingResult = await prisma.transaction.aggregate({
@@ -148,13 +154,13 @@ export const getSummaryData = async (userId: string) => {
           percentageUsed >= 100
             ? "EXCEEDED"
             : percentageUsed >= 80
-            ? "WARNING"
-            : "OK",
+              ? "WARNING"
+              : "OK",
       };
     })
   );
 
-  
+
   const healthScore: ReturnType<typeof calculateHealthScore> = calculateHealthScore(
     monthlySummary.totalIncome,
     monthlySummary.totalExpenses,
@@ -162,20 +168,20 @@ export const getSummaryData = async (userId: string) => {
   );
 
   const totalSubscriptionCost = subscriptions.reduce(
-  (sum: number, sub) => {
-    const amount = Number(sub.amount);
-    if (sub.cycle === "WEEKLY") return sum + amount * 4.33;
-    if (sub.cycle === "YEARLY") return sum + amount / 12;
-    return sum + amount;
-  }, 0);
+    (sum: number, sub) => {
+      const amount = Number(sub.amount);
+      if (sub.cycle === "WEEKLY") return sum + amount * 4.33;
+      if (sub.cycle === "YEARLY") return sum + amount / 12;
+      return sum + amount;
+    }, 0);
 
-  
+
   const formattedTransactions = recentTransactions.map((t) => ({
     ...t,
     amount: Number(t.amount),
   }));
 
- 
+
   const formattedGoals = goals.map((g) => {
     const current = Number(g.currentAmount);
     const target = Number(g.targetAmount);
@@ -189,20 +195,20 @@ export const getSummaryData = async (userId: string) => {
     };
   });
 
- 
+
   return {
-   
+
     totalIncome: monthlySummary.totalIncome,
     totalExpenses: monthlySummary.totalExpenses,
     balance: monthlySummary.balance,
     savings,
 
-   
+
     healthScore: healthScore.score,
     healthScoreLabel: healthScore.label,
     healthScoreBreakdown: healthScore.breakdown,
 
-   
+
     categoryBreakdown,
     monthlyTrend,
 
@@ -212,10 +218,10 @@ export const getSummaryData = async (userId: string) => {
     totalSubscriptionCost: Math.round(totalSubscriptionCost),
 
     period: {
-     month: now.toLocaleDateString("en-IN", {
-  month: "long",
-}),
-      year: now.getFullYear(),
+      month: baseDate.toLocaleDateString("en-IN", {
+        month: "long",
+      }),
+      year: baseDate.getFullYear(),
     },
   };
 };

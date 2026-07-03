@@ -177,15 +177,18 @@ export const getCategoryBreakdown = async (
   }));
 };
 
-export const getMonthlyTrend = async (userId: string, months: number = 6) => {
+export const getMonthlyTrend = async (
+  userId: string,
+  months: number = 6,
+  baseDate: Date = new Date()
+) => {
   const results: { month: string; income: number; expense: number }[] = [];
 
   for (let i = months - 1; i >= 0; i--) {
-    const date = new Date();
-    const startDate = new Date(date.getFullYear(), date.getMonth() - i, 1);
+    const startDate = new Date(baseDate.getFullYear(), baseDate.getMonth() - i, 1);
     const endDate = new Date(
-      date.getFullYear(),
-      date.getMonth() - i + 1,
+      baseDate.getFullYear(),
+      baseDate.getMonth() - i + 1,
       0,
       23,
       59,
