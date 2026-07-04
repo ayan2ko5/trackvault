@@ -1,4 +1,5 @@
 {
+
   "name": "trackvault-server",
   "version": "1.0.0",
   "description": "TrackVault Backend API",
@@ -46,4 +47,52 @@
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   }
+    "name": "trackvault-server",
+    "version": "1.0.0",
+    "description": "TrackVault Backend API",
+    "main": "dist/index.js",
+    "type": "commonjs",
+    "scripts": {
+        "dev": "nodemon --exec ts-node src/index.ts",
+        "build": "prisma generate && tsc",
+        "start": "node dist/index.js",
+        "lint": "echo \"Lint setup later\""
+    },
+    "keywords": [
+        "trackvault",
+        "finance",
+        "express",
+        "typescript",
+        "prisma"
+    ],
+    "author": "Ayan Sheikh",
+    "license": "MIT",
+    "dependencies": {
+        "@prisma/client": "^6.16.2",
+        "bcrypt": "^6.0.0",
+        "cloudinary": "^2.10.0",
+        "cors": "^2.8.6",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "express-rate-limit": "^8.5.2",
+        "express-validator": "^7.3.2",
+        "helmet": "^8.2.0",
+        "jsonwebtoken": "^9.0.3",
+        "multer": "^2.2.0",
+        "prisma": "^6.16.2",
+        "zod": "^4.4.3"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^6.0.0",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.6",
+        "@types/express-validator": "^2.20.33",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/multer": "^2.1.0",
+        "@types/node": "^26.0.1",
+        "nodemon": "^3.1.14",
+        "ts-node": "^10.9.2",
+        "typescript": "^6.0.3"
+    }
+
 }
