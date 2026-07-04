@@ -14,6 +14,7 @@ const server = app.listen(PORT, () => {
   console.log("========================================");
 });
 
+
 const shutdown = (signal: string) => {
   console.log(`\n${signal} received. Shutting down...`);
 
